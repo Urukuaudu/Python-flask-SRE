@@ -1,4 +1,12 @@
-output "cluster_endpoint" {
-   description = "Endpoint for EKS control plane"
-   value       = module.eks.cluster_endpoint
+output "private" {
+  value = aws_subnet.private.*.id
+
+}
+output "public" {
+  value = aws_subnet.public.*.id
+
+}
+output "node_role" {
+  value = aws_iam_role.demo.arn
+
 }
