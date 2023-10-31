@@ -1,8 +1,8 @@
 # Create EKS Cluster
 resource "aws_eks_cluster" "demo" {
   name     = "demo"
-  #role_arn = data.terraform_remote_state.network.outputs.demo_role
-  role_arn =  "arn:aws:iam::105410359089:role/eks-cluster-demo"
+  role_arn = data.terraform_remote_state.network.outputs.node_role
+  #role_arn =  "arn:aws:iam::752724691123:role/eks-cluster-demo"
 
   vpc_config {
     subnet_ids = [
