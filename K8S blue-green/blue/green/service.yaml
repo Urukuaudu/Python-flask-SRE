@@ -1,0 +1,14 @@
+kind: Service 
+apiVersion: v1
+metadata:
+  name: deployment-demo-green
+spec:
+  type: LoadBalancer
+  selector:
+    app: deployment-demo-green
+    deployment: green
+    version: 1.0.1
+  ports:
+    - port: 5000
+      targetPort: 50
+      protocol: TCP
