@@ -1,0 +1,28 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: deployment-demo
+  labels:
+    app: deployment-demo
+    deployment: blue
+    version: 1.0.0
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: deployment-demo
+      deployment: blue
+      version: 1.0.0
+  template:
+    metadata:
+      labels:
+        app: deployment-demo
+        deployment: blue
+        version: 1.0.0
+    spec:
+      containers:
+        - name: deployment-demo
+          image: uruku/web:blue
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
