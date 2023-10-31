@@ -1,15 +1,15 @@
 #1. Create VPC
-resource "aws_vpc" "myvpc" {
+resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
 
   tags = {
-    Name = "myvpc"
+    Name = "main"
   }
 }
 
 #2. Create IGW
 resource "aws_internet_gateway" "igw" {
-  vpc_id = aws_vpc.myvpc.id
+  vpc_id = aws_vpc.main.id
 
   tags = {
     Name = "igw"
@@ -18,16 +18,10 @@ resource "aws_internet_gateway" "igw" {
 
 #3. Create EIP
 resource "aws_eip" "nat" {
-
+  
 
   tags = {
     Name = "nat"
-
-    enable_nat_gateway   = true
-    single_nat_gateway   = true
-    enable_dns_hostnames = true
-
-
   }
 }
 
@@ -46,21 +40,21 @@ resource "aws_nat_gateway" "nat" {
 #5. Create private subnet
 resource "aws_subnet" "private" {
   count             = length(var.private_cidr)
-  vpc_id            = aws_vpc.myvpc.id
+  vpc_id            = aws_vpc.main.id
   cidr_block        = element(var.private_cidr, count.index)
   availability_zone = element(var.availability_zones, count.index)
 
   tags = {
-    "Name"                       = "private"
-    "kubernetes.io/role/elb"     = "1"
-    "kubernetes.io/cluster/demo" = "owned"
+    "Name"                            = "private"
+    "kubernetes.io/role/elb" = "1"
+    "kubernetes.io/cluster/demo"      = "owned"
   }
 }
 
 #6. Create public subnet
 resource "aws_subnet" "public" {
-  count                   = length(var.public_cidr)
-  vpc_id                  = aws_vpc.myvpc.id
+  count                   = length (var.public_cidr)
+  vpc_id                  = aws_vpc.main.id
   cidr_block              = element(var.public_cidr, count.index)
   availability_zone       = element(var.availability_zones, count.index)
   map_public_ip_on_launch = true
@@ -74,7 +68,7 @@ resource "aws_subnet" "public" {
 
 #7. Create private route table
 resource "aws_route_table" "private" {
-  vpc_id = aws_vpc.myvpc.id
+  vpc_id = aws_vpc.main.id
 
   depends_on = [aws_subnet.private]
 
@@ -85,7 +79,7 @@ resource "aws_route_table" "private" {
 
 #8. Create public route table
 resource "aws_route_table" "public" {
-  vpc_id = aws_vpc.myvpc.id
+  vpc_id = aws_vpc.main.id
 
   depends_on = [aws_subnet.public]
 
