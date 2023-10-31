@@ -1,0 +1,13 @@
+kind: Service 
+apiVersion: v1
+metadata:
+  name: deployment-demo
+spec:
+  type: LoadBalancer
+  selector:              # to switch environment you make adjustment only in the selector area
+    app: deployment-dem  # you add '-green' to 'demo' to switch environment without down time 
+    deployment: blue     # you change blue to green
+    version: 1.0.0       # change the version to 1.0.1
+  ports:
+    - port: 5000
+      protocol: TCP
